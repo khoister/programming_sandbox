@@ -110,11 +110,11 @@ vector<string> Trie::similar(const string& prefix) const {
             return v;
 
         n = n->child(c);
-
-        // The prefix itself is a valid word
-        if (i == prefix.length()-1 && n->is_word)
-            v.push_back(prefix);
     }
+
+    // The prefix itself is a valid word
+    if (n->is_word)
+        v.push_back(prefix);
 
     map<char, TrieNodePtr>::const_iterator iter = n->children.begin();
     for ( ; iter != n->children.end(); ++iter) {
