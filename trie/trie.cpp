@@ -47,6 +47,7 @@ void Trie::load(const string& file) {
     while (getline(fs, word)) {
         add(word);
     }
+    fs.close();
 }
 
 void Trie::add(const string& word) {
