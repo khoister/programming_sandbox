@@ -1,14 +1,17 @@
-#include <boost/shared_ptr.hpp>
+// To build: g++ -std=c++11 trie.cpp
+
+#include <memory>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <assert.h>
 #include <vector>
+#include <map>
 
 using namespace std;
 
 class TrieNode;
-typedef boost::shared_ptr<TrieNode> TrieNodePtr;
+typedef std::shared_ptr<TrieNode> TrieNodePtr;
 
 class TrieNode
 {
@@ -19,7 +22,7 @@ class TrieNode
 
         char c;
         bool is_word;
-        TrieNodePtr children[128];
+        map<char, TrieNodePtr> children;
 
 };
 
@@ -86,7 +89,9 @@ void Trie::suffix(TrieNodePtr n, string& s, vector<string>& v) const {
             v.push_back(s);
         }
 
-        for (char c = 0; c < (char)127; ++c) {
+        map<char, TrieNodePtr>::const_iterator iter = n->children.begin();
+        for ( ; iter != n->children.end(); ++iter) {
+            char c = iter->first;
             if (n->child(c)) {
                 suffix(n->child(c), s, v);
                 // Backtrack
@@ -110,7 +115,10 @@ vector<string> Trie::similar(const string& prefix) const {
         if (i == prefix.length()-1 && n->is_word)
             v.push_back(prefix);
     }
-    for (char c = 0; c < (char)127; ++c) {
+
+    map<char, TrieNodePtr>::const_iterator iter = n->children.begin();
+    for ( ; iter != n->children.end(); ++iter) {
+        char c = iter->first;
         if (n->child(c)) {
             string s(prefix);
             suffix(n->child(c), s, v);
